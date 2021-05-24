@@ -1,6 +1,13 @@
 import cv2
 import os
 
+# Color values in BGR
+RED = (0, 0, 255)
+GREEN = (0, 255, 0)
+
+padding =  70
+
+# Helper function to load face-detection cascade file
 def load_cascade():
     face_cascade = cv2.CascadeClassifier()
     cv2_base_dir = os.path.dirname(os.path.abspath(cv2.__file__))
@@ -11,7 +18,8 @@ def load_cascade():
 
     return face_cascade
 
-def detect_face(image):
+# Face detection using OpenCV's detect cascade detection, returns list of faces detected
+def detect_faces(image):
     face_cascade = load_cascade()
     
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -19,11 +27,14 @@ def detect_face(image):
 
     faces = face_cascade.detectMultiScale(image_gray)
     
-    # Temporarily print
-    for (x,y,w,h) in faces:
-        center = (x + w//2, y + h//2)
-        image = cv2.ellipse(image, center, (w//2, h//2), 0, 0, 360, (255, 0, 0), 4)
-        cv2.imshow('Dami Jocely face detection', image)
+    return faces
 
-#def print_face(face):
+# Returns an image cropped by the face bounds plus padding
+def crop_image(image, face):
+    pass
 
+# Prints face with color corresponding to if face is masked or not.
+def print_face(image, face, is_masked):
+    x,y,w,h = face
+    image = cv2.rectangle(image, (x - padding // 2,y - padding // 2), (x + w + padding // 2, y + h + padding//2), RED)
+    cv2.imshow('Dami Jocely face detection', image)
