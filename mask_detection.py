@@ -21,7 +21,7 @@ while run:
     for face in faces:
         print_face(image, face, True)
         cropped_image = crop_image(image, face)
-
+        cv2.imshow('Cropped image', cropped_image)
 
 
     if cv2.waitKey(5) & 0xFF == 27:
