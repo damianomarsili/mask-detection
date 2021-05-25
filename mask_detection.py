@@ -1,6 +1,5 @@
 import cv2
 from tensorflow import keras
-from tensorflow.keras import layers
 import os
 from face_detection import detect_faces, print_face, crop_image
 
@@ -18,7 +17,7 @@ def load_model(json, weights):
 
 def main():
     cap = cv2.VideoCapture(0)
-    model = load_model('mask_detection.json', 'mask_detection.h5')
+    #model = load_model('mask_detection.json', 'mask_detection.h5')
     run = True
 
     while run:
@@ -33,7 +32,7 @@ def main():
         faces = detect_faces(image)    
     
         for face in faces:
-            #print_face(image, face, True)
+            # print_face(image, face, True) # Can uncomment to see facial detection
             cropped_image = crop_image(image, face)
             
             # TODO: send cropped_image to model to evaluate 
