@@ -21,13 +21,51 @@ def convert_to_float(image, label):
     image = tf.image.convert_image_dtype(image, dtype=tf.float32)
     return image, label
 
-# TODO: See hidden code in first lesson on Kaggle (Or setup block on exercise of first lesson)
+# TODO: Need to specify image size (currently set at 128x128) - need to check our dataset (might need to normalize size ?)
 def load_ds_train():
-    pass
+    ds_train = image_dataset_from_directory(
+            'data/train',
+            labels = 'inferred',
+            label_mode = 'binary',
+            image_size = [128, 128],
+            interpolation = 'nearest',
+            batch_size = 64,
+            shuffle = True,
+    )
 
-# TODO: See hidden code in first lesson on Kaggle (Or setup block on exercise of first lesson)
+    AUTOTUNE = tf.data.experimental.AUTOTUNE
+    
+    ds_train = (
+            ds_train_
+            .map(convert_to_float)
+            .cache()
+            .prefetch(buffer_size = AUTOTUNE)
+    )
+
+    return ds_train
+
+# TODO: See comment above load_ds_train ^
 def load_ds_valid():
-    pass
+    ds_valid = image_dataset_from_directory(
+            'data/valid',
+            labels = 'inferred',
+            label_mode = 'binary',
+            image_size = [128, 128],
+            interpolation = 'nearest',
+            batch_size = 64,
+            shuffle = False,
+    )
+
+    AUTOTUNE = tf.data.experimental.AUTOTUNE
+    
+    ds_valid = (
+            ds_valid_
+            .map(convert_to_float)
+            .cache()
+            .prefetch(buffer_size = AUTOTUNE)
+    )
+
+    return ds_valid
 
 def plot_metrics(history):
    history_frame = pd.DataFrame(history.history)
@@ -57,7 +95,7 @@ def train(model):
 # TODO: All choices below are entriely meaningless atm - need to experiment and optimize
 # TODO: Also need to check sizes/shapes I'm lost atm
 def make_model():
-    pretrained_base = tf.keras.applications.ResNet50() # Need to check if need to change input_shape param
+    pretrained_base = tf.keras.applications.ResNet50(input_shape = (128, 128, 3)) # Need to check input_shape
     pretrained_base.trainable = False
 
     model = keras.Sequential([
