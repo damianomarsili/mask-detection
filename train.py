@@ -36,7 +36,7 @@ def load_ds_train():
     AUTOTUNE = tf.data.experimental.AUTOTUNE
     
     ds_train = (
-            ds_train_
+            ds_train
             .map(convert_to_float)
             .cache()
             .prefetch(buffer_size = AUTOTUNE)
@@ -59,7 +59,7 @@ def load_ds_valid():
     AUTOTUNE = tf.data.experimental.AUTOTUNE
     
     ds_valid = (
-            ds_valid_
+            ds_valid
             .map(convert_to_float)
             .cache()
             .prefetch(buffer_size = AUTOTUNE)
