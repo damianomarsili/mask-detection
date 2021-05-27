@@ -21,13 +21,13 @@ def convert_to_float(image, label):
     image = tf.image.convert_image_dtype(image, dtype=tf.float32)
     return image, label
 
-# TODO: Need to specify image size (currently set at 128x128) - need to check our dataset (might need to normalize size ?)
+# TODO: Need to specify image size (currently set at 224x224) - need to check our dataset (might need to normalize size ?)
 def load_ds_train():
     ds_train = image_dataset_from_directory(
             'data/train',
             labels = 'inferred',
             label_mode = 'binary',
-            image_size = [128, 128],
+            image_size = [224, 224],
             interpolation = 'nearest',
             batch_size = 64,
             shuffle = True,
@@ -50,7 +50,7 @@ def load_ds_valid():
             'data/valid',
             labels = 'inferred',
             label_mode = 'binary',
-            image_size = [128, 128],
+            image_size = [224, 224],
             interpolation = 'nearest',
             batch_size = 64,
             shuffle = False,
@@ -95,7 +95,7 @@ def train(model):
 # TODO: All choices below are entriely meaningless atm - need to experiment and optimize
 # TODO: Also need to check sizes/shapes I'm lost atm
 def make_model():
-    pretrained_base = tf.keras.applications.ResNet50(input_shape = (128, 128, 3)) # Need to check input_shape
+    pretrained_base = tf.keras.applications.ResNet50(input_shape = (224, 224, 3)) # Need to check input_shape
     pretrained_base.trainable = False
 
     model = keras.Sequential([
