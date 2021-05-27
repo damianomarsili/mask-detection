@@ -110,4 +110,4 @@ def make_model():
 
 model = make_model()
 train(model)
-save_model('mask_detetion.json', 'mask_detection.h5', model)
+save_model('mask_detection.json', 'mask_detection.h5', model)
