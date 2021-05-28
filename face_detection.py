@@ -25,15 +25,12 @@ def detect_faces(image):
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     image_gray = cv2.equalizeHist(image_gray)
 
-    faces = face_cascade.detectMultiScale(image_gray)
-    
-    return faces
+    return face_cascade.detectMultiScale(image_gray)
 
 # Returns an image cropped by the face bounds plus padding
 def crop_image(image, face):
     x,y,w,h = face
-    crop_img = image[y - padding //2 : y + h + padding //2, x - padding // 2 : x + w + padding //2]
-    return crop_img
+    return image[y - padding //2 : y + h + padding //2, x - padding // 2 : x + w + padding //2]
 
 # Prints face with color corresponding to if face is masked or not.
 def print_face(image, face, is_masked):
@@ -42,4 +39,4 @@ def print_face(image, face, is_masked):
         image = cv2.rectangle(image, (x - padding // 2, y - padding // 2), (x + w + padding // 2, y + h + padding // 2), GREEN)
     else:
         image = cv2.rectangle(image, (x - padding // 2, y - padding // 2), (x + w + padding // 2, y + h + padding // 2), RED)
-    cv2.imshow('Dami Jocely face detection', image)
+    cv2.imshow('Dami Jocelyn face detection', image)

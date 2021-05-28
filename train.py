@@ -103,6 +103,7 @@ def make_model():
         layers.Flatten(),
         layers.Dense(15, activation = 'relu'),
         layers.Dense(1, activation = 'sigmoid'),
+        layers.BatchNormalization(),
         ])
     return model
 
