@@ -52,10 +52,8 @@ def update_text(image, num_masks):
 def main():
     cap = cv2.VideoCapture(0)
     model = load_model('mask_detection.json', 'mask_detection.h5')
-    run = True
     
-    prev_time = time.time()
-    while run:
+    while True:
         success, image = cap.read()
     
         if not success:
@@ -72,17 +70,16 @@ def main():
         
         mask_counter = 0
         
-        if time.time() - prev_time >= 1:
-            for face in faces:
-                cropped_image = crop_image(image, face)
-                detect_mask(image, model)
+        for face in faces:
+            cropped_image = crop_image(image, face)
+            detect_mask(image, model)
              
-                if detect_mask(image, model):
-                    image = print_face(image, face, True) 
-                    mask_counter += 1
-                else:
-                    image = print_face(image, face, False)
-            prev_time = time.time()
+            if detect_mask(image, model):
+                image = print_face(image, face, True) 
+                mask_counter += 1
+            else:
+                image = print_face(image, face, False)
+
         image = update_text(image, mask_counter)
         cv2.imshow("Dami & Jocelyn's Mask Detection", image)
 
