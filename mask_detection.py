@@ -63,10 +63,10 @@ def main():
         # flip image along y axis for selfie-view
         image = cv2.flip(image, 1)
         faces = detect_faces(image)
-        if (len(faces) == 0) {
+        if len(faces) == 0 :
             print('No person detected')
             break # terminate program for now
-        }    
+        
         
         mask_counter = 0
 
