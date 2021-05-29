@@ -4,7 +4,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from tensorflow.keras.preprocessing import image_dataset_from_directory
+from tensorflow.keras.preprocessing import image
+from pathlib import Path
 
 
 def save_model(json_filename, weights_filename, model):
@@ -23,25 +24,14 @@ def convert_to_float(image, label):
 
 # TODO: Need to specify image size (currently set at 224x224) - need to check our dataset (might need to normalize size ?)
 def load_ds_train():
-    ds_train = image_dataset_from_directory(
-            'data/train',
-            labels = 'inferred',
-            label_mode = 'binary',
-            image_size = [224, 224],
-            interpolation = 'nearest',
-            batch_size = 64,
-            shuffle = True,
-    )
-
-    AUTOTUNE = tf.data.experimental.AUTOTUNE
-    
-    ds_train = (
-            ds_train
-            .map(convert_to_float)
-            .cache()
-            .prefetch(buffer_size = AUTOTUNE)
-    )
-
+    p = Path('data/train')
+    dirs = p.glob('*')
+    labels = []
+    data = []
+    label_dict = {'mask' : 0, 'non-mask': 1}
+    for folder in dirs:
+        label = str(folder).split('/')[-1]
+        print(label)
     return ds_train
 
 # TODO: See comment above load_ds_train ^
@@ -76,7 +66,7 @@ def plot_metrics(history):
 def train(model):
     ds_train = load_ds_train()
     ds_valid = load_ds_valid()
-    
+   
     optimizer = tf.keras.optimizers.Adam(epsilon = 0.01)
     model.compile(
             optimizer = optimizer,
@@ -91,6 +81,7 @@ def train(model):
             )
 
     plot_metrics(history)
+    
 
 # TODO: All choices below are entriely meaningless atm - need to experiment and optimize
 # TODO: Also need to check sizes/shapes I'm lost atm
