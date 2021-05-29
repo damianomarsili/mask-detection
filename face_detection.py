@@ -42,4 +42,4 @@ def print_face(image, face, is_masked):
         image = cv2.rectangle(image, (x - padding // 2, y - padding // 2), (x + w + padding // 2, y + h + padding // 2), GREEN)
     else:
         image = cv2.rectangle(image, (x - padding // 2, y - padding // 2), (x + w + padding // 2, y + h + padding // 2), RED)
-    cv2.imshow('Dami Jocely face detection', image)
+    cv2.imshow("Dami & Jocelyn's Mask Detection", image)
