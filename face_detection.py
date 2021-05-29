@@ -32,7 +32,7 @@ def detect_faces(image):
 # Returns an image cropped by the face bounds plus padding
 def crop_image(image, face):
     x,y,w,h = face
-    crop_img = image[y - padding //2 : y + h + padding //2, x - padding // 2 : x + w + padding //2]
+    crop_img = image[y - 112 : y + 112, x - 112: x + 112]
     return crop_img
 
 # Prints face with color corresponding to if face is masked or not.
