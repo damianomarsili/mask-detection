@@ -31,15 +31,16 @@ def detect_faces(image):
 
 # Returns an image cropped by the face bounds plus padding
 def crop_image(image, face):
-    x,y,w,h = face
+    x, y, w, h = face
     crop_img = image[y - 112 : y + 112, x - 112: x + 112]
     return crop_img
 
 # Prints face with color corresponding to if face is masked or not.
 def print_face(image, face, is_masked):
-    x,y,w,h = face
+    x, y, w, h = face
     if is_masked:
         image = cv2.rectangle(image, (x - padding // 2, y - padding // 2), (x + w + padding // 2, y + h + padding // 2), GREEN)
     else:
         image = cv2.rectangle(image, (x - padding // 2, y - padding // 2), (x + w + padding // 2, y + h + padding // 2), RED)
-    cv2.imshow("Dami & Jocelyn's Mask Detection", image)
+
+    return image
