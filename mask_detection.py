@@ -3,6 +3,7 @@ from tensorflow import keras
 import os
 from face_detection import detect_faces, print_face, crop_image
 import numpy as np
+import time
 
 # Colors in BGR
 RED = (0, 0, 255)
@@ -52,7 +53,8 @@ def main():
     cap = cv2.VideoCapture(0)
     model = load_model('mask_detection.json', 'mask_detection.h5')
     run = True
-
+    
+    prev_time = time.time()
     while run:
         success, image = cap.read()
     
@@ -65,17 +67,18 @@ def main():
         faces = detect_faces(image)    
         
         mask_counter = 0
-
-        for face in faces:
-            cropped_image = crop_image(image, face)
-            detect_mask(image, model)
-            
-            if detect_mask(image, model):
-                image = print_face(image, face, True) 
-                mask_counter += 1
-            else:
-                image = print_face(image, face, False)
-
+        
+        if time.time() - prev_time >= 1:
+            for face in faces:
+                cropped_image = crop_image(image, face)
+                detect_mask(image, model)
+             
+                if detect_mask(image, model):
+                    image = print_face(image, face, True) 
+                    mask_counter += 1
+                else:
+                    image = print_face(image, face, False)
+            prev_time = time.time()
         image = update_text(image, mask_counter)
         cv2.imshow("Dami & Jocelyn's Mask Detection", image)
 
