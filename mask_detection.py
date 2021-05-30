@@ -22,16 +22,10 @@ def load_model(json, weights):
     model.load_weights(weights)
     return model
 
-# Applies image smoothing
-def blur_image(image, image_size):
-    image = cv2.blur(image, (5,5))
-    image = cv2.resize(image, image_size)
-    return image
-
 def detect_mask(image, model):
     x = []
     image_size = (224, 224)
-    image = blur_image(image, image_size)
+    image = cv2.resize(image, image_size)
     x.append(image)
     image = np.array(x)
     return model.predict(image)[0][0] > 0.5
@@ -53,6 +47,11 @@ def main():
     cap = cv2.VideoCapture(0)
     model = load_model('mask_detection.json', 'mask_detection.h5')
     
+    prev_time = 0
+    faces = []
+    masked = []
+    masked_counter = 0
+
     while True:
         success, image = cap.read()
     
@@ -62,25 +61,32 @@ def main():
 
         # flip image along y axis for selfie-view
         image = cv2.flip(image, 1)
-        faces = detect_faces(image)
-        if len(faces) == 0 :
-            print('No person detected')
-            break # terminate program for now
         
-        
-        mask_counter = 0
-        
-        for face in faces:
-            cropped_image = crop_image(image, face)
-            detect_mask(image, model)
-             
-            if detect_mask(image, model):
-                image = print_face(image, face, True) 
-                mask_counter += 1
-            else:
-                image = print_face(image, face, False)
+        # If a second has elapsed - evaluate faces
+        if time.time() - prev_time > 1:
+            faces = detect_faces(image)
+            masked_counter = 0
+            masked.clear()
+            
+            if len(faces) == 0 :
+                print('No person detected')
+                break # terminate program for now
+            
+            for x in range(len(faces)):
+                cropped_image = crop_image(image, faces[x])
+                
+                is_masked = detect_mask(cropped_image, model)
+                masked.append(is_masked)
 
-        image = update_text(image, mask_counter)
+                if is_masked:
+                    masked_counter += 1
+            prev_time = time.time()
+        
+        # Add faces and text to image
+        for x in range(len(faces)):
+            image = print_face(image, faces[x], masked[x])
+        image = update_text(image, masked_counter)
+
         cv2.imshow("Dami & Jocelyn's Mask Detection", image)
 
         if cv2.waitKey(5) & 0xFF == 27:
