@@ -11,10 +11,19 @@ import sys # FOR DEBUGGING
 RED = (0, 0, 255)
 GREEN = (0, 255, 0)
 
-# Loads model from files
 def load_model(json, weights):
+    """ Loads model from files
+
+    Args:
+        json (str): JSON file that contains image
+        weights (str): Kernels representing weighted sum of pixel val
+
+    Returns:
+        [type]: Model with weights.
+    """
+
     # Load json and create model
-    json_file = open(json, 'r')
+    json_file = open(json, 'r') 
     model_json = json_file.read()
     json_file.close()
 
@@ -25,6 +34,17 @@ def load_model(json, weights):
     return model
 
 def detect_mask(image, model):
+    """ Detects if mask is present.
+
+    Pre: Face is detected in image.
+
+    Args:
+        image (cv2): Input image to determine mask presence.
+        model ([type]): Model developed from neural network training.
+
+    Returns:
+        boolean: True if mask is present, false otherwise.
+    """
     x = []
     image_size = (224, 224)
     image = cv2.resize(image, image_size)
@@ -33,6 +53,16 @@ def detect_mask(image, model):
     return model.predict(image)[0][0] > 0.5
 
 def update_text(image, num_masks, faces_detected):
+    """ Updates text displayed on monitor based on mask and face presence.
+
+    Args:
+        image (cv2): Input image to determine mask presence.
+        num_masks (int): Number of masks detected.
+        faces_detected (boolean): True if mask is present, false otherwise.
+
+    Returns:
+        [cv2]: Updated image with corresponding text description.
+    """
     font = cv2.FONT_HERSHEY_TRIPLEX
     thickness = 1
     font_scale = 1
@@ -48,6 +78,8 @@ def update_text(image, num_masks, faces_detected):
     return image
 
 def main():
+    """ Run mask detection.
+    """
     cap = cv2.VideoCapture(0)
     model = load_model('mask_detection.json', 'mask_detection.h5')
     
