@@ -1,43 +1,42 @@
 import cv2
 import os
+import mediapipe as mp
 
 # Color values in BGR
 RED = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 padding =  70
- 
-def load_cascade():
-    """ Helper function to load face-detection cascade file.
 
-    Returns:
-        cv2: face-detection cascade file.
-    """
-    face_cascade = cv2.CascadeClassifier()
-    cv2_base_dir = os.path.dirname(os.path.abspath(cv2.__file__))
-    haar_model = os.path.join(cv2_base_dir, 'data/haarcascade_frontalface_default.xml')
-    if not face_cascade.load(cv2.samples.findFile(haar_model)):
-        print('--(!)Error loading face cascade')
-        exit(0)
-
-    return face_cascade
-
-def detect_faces(image):
-    """ Face detection using OpenCV's detect cascade detection.
+def detect_faces(image, height, width):
+    """ Face detection using Mediapipe's face detection.
 
     Args:
         image (cv2): Input image to determine if faces are present.
+        height (int): Height of input frame
+        width (int): Width of input frame
 
     Returns:
-        list: All faces detected.
+        list: Tuple of faces detected (xmin, ymin, width, height)
     """
-    face_cascade = load_cascade()
-    
-    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    image_gray = cv2.equalizeHist(image_gray)
+    mp_face_detection = mp.solutions.face_detection
+    faces = []
 
-    faces = face_cascade.detectMultiScale(image_gray)
-    
+    with mp_face_detection.FaceDetection(min_detection_confidence = 0.5) as face_detection:
+
+        results = face_detection.process(image)
+
+        if results.detections:
+            for detection in results.detections: 
+                bounding_box = detection.location_data.relative_bounding_box
+                # All values in detection normalized 0.0 -> 1.0
+                face = [
+                        int(bounding_box.xmin * width), 
+                        int(bounding_box.ymin * height), 
+                        int(bounding_box.width * width), 
+                        int(bounding_box.height * height)
+                        ]
+                faces.append(face)
     return faces
 
 def crop_image(image, face):

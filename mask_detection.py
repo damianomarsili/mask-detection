@@ -84,6 +84,8 @@ def main():
     """ Run mask detection.
     """
     cap = cv2.VideoCapture(0)
+    height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     model = load_model('mask_detection.json', 'mask_detection.h5')
     
     prev_time = 0
@@ -103,7 +105,7 @@ def main():
         
         # If a second has elapsed - evaluate faces
         if time.time() - prev_time > 1:
-            faces = detect_faces(image)
+            faces = detect_faces(image, height, width)
             masked_counter = 0
             masked.clear()
             
