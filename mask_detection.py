@@ -5,6 +5,8 @@ from face_detection import detect_faces, print_face, crop_image
 import numpy as np
 import time
 
+import sys # FOR DEBUGGING
+
 # Colors in BGR
 RED = (0, 0, 255)
 GREEN = (0, 255, 0)
@@ -72,11 +74,16 @@ def main():
             
             for x in range(len(faces)):
                 cropped_image = crop_image(image, faces[x])
-                is_masked = detect_mask(cropped_image, model)
-                masked.append(is_masked)
 
+                if not cropped_image.all(): # Handles empty image crops
+                    is_masked = detect_mask(cropped_image, model)
+                else:
+                    is_masked = False
+
+                masked.append(is_masked)
                 if is_masked:
                     masked_counter += 1
+                        
             prev_time = time.time()
         
         # Add faces and text to image
