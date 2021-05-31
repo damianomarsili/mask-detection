@@ -74,8 +74,9 @@ def main():
             
             for x in range(len(faces)):
                 cropped_image = crop_image(image, faces[x])
+                length = len(cropped_image)
 
-                if not cropped_image.all(): # Handles empty image crops
+                if length != 0: # Handles empty image crops
                     is_masked = detect_mask(cropped_image, model)
                 else:
                     is_masked = False
