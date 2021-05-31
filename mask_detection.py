@@ -27,7 +27,10 @@ def load_model(json, weights):
 def detect_mask(image, model):
     x = []
     image_size = (224, 224)
-    image = cv2.resize(image, image_size)
+    try:
+        image = cv2.resize(image, image_size)
+    except:
+        return False
     x.append(image)
     image = np.array(x)
     return model.predict(image)[0][0] > 0.5
@@ -74,14 +77,9 @@ def main():
             
             for x in range(len(faces)):
                 cropped_image = crop_image(image, faces[x])
-                length = len(cropped_image)
-
-                if length != 0: # Handles empty image crops
-                    is_masked = detect_mask(cropped_image, model)
-                else:
-                    is_masked = False
-
+                is_masked = detect_mask(cropped_image, model)
                 masked.append(is_masked)
+
                 if is_masked:
                     masked_counter += 1
                         
