@@ -1,0 +1,4 @@
+HOW TO FIX:
+
+TRY to resize,
+EXCEPT error RETURN 0 (NO MASK)
