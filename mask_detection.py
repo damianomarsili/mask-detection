@@ -19,7 +19,7 @@ def load_model(json, weights):
         weights (str): Kernels representing weighted sum of pixel val
 
     Returns:
-        [type]: Model with weights.
+        keras.Sequential: Model with weights.
     """
 
     # Load json and create model
@@ -40,7 +40,7 @@ def detect_mask(image, model):
 
     Args:
         image (cv2): Input image to determine mask presence.
-        model ([type]): Model developed from neural network training.
+        model (keras.Sequential): Model developed from neural network training.
 
     Returns:
         boolean: True if mask is present, false otherwise.

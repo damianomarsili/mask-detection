@@ -15,7 +15,7 @@ def save_model(json_filename, weights_filename, model):
     Args:
         json_filename (str): Name of JSON file.
         weights_filename (str): Name of weights file.
-        model ([type]): Trained neural network model.
+        model (keras.sequential): Trained neural network model.
     """
     # Save model as JSON
     model_json = model.to_json()
@@ -175,8 +175,8 @@ def preprocess_labels(train_labels, valid_labels, test_labels):
 
     Args:
         train_labels (np array): Collection of all training result labels.
-        valid_labels ([type]): Collection of all validation result labels.
-        test_labels ([type]): Collection of all testing result labels.
+        valid_labels (np array): Collection of all validation result labels.
+        test_labels (np array): Collection of all testing result labels.
 
     Returns:
         [3 np arrays]: Binary labels.
@@ -193,7 +193,7 @@ def plot_metrics(history):
     """ Display training metrics.
 
     Args:
-        history ([type]): Validation results.
+        history (np array): Validation results.
     """
     history_frame = pd.DataFrame(history.history)
     history_frame.loc[:, ['loss', 'val_loss']].plot()
@@ -204,7 +204,7 @@ def train(model):
     """ Train neural network model.
 
     Args:
-        model ([type]): Trained model.
+        model (keras.Sequential): Trained model.
     """
     train_images, train_labels = load_ds_train()
     valid_images, valid_labels = load_ds_valid()
@@ -239,7 +239,7 @@ def make_model():
     """ Set model parameters.
 
     Returns:
-        [type]: Model with parameters and optimizers.
+        keras.Sequential: Model with parameters and optimizers.
     """
     pretrained_base = tf.keras.applications.ResNet50(input_shape = (224, 224, 3)) # Need to check input_shape
     pretrained_base.trainable = False
