@@ -30,13 +30,15 @@ def detect_mask(image, model):
     image = np.array(x)
     return model.predict(image)[0][0] > 0.5
 
-def update_text(image, num_masks):
+def update_text(image, num_masks, faces_detected):
     font = cv2.FONT_HERSHEY_TRIPLEX
     thickness = 1
     font_scale = 1
     org = (0, 30)
 
-    if num_masks > 0:
+    if not faces_detected:
+        image = cv2.putText(image, 'No face detected', org, font, font_scale, RED, thickness, cv2.LINE_AA)
+    elif num_masks > 0:
         image = cv2.putText(image, 'Detected ' + str(num_masks) + ' masks', org, font, font_scale, GREEN, thickness, cv2.LINE_AA)
     else:
         image = cv2.putText(image, 'No Masks Detected', org, font, font_scale, RED, thickness, cv2.LINE_AA)
@@ -68,13 +70,8 @@ def main():
             masked_counter = 0
             masked.clear()
             
-            if len(faces) == 0 :
-                print('No person detected')
-                break # terminate program for now
-            
             for x in range(len(faces)):
                 cropped_image = crop_image(image, faces[x])
-                
                 is_masked = detect_mask(cropped_image, model)
                 masked.append(is_masked)
 
@@ -85,7 +82,7 @@ def main():
         # Add faces and text to image
         for x in range(len(faces)):
             image = print_face(image, faces[x], masked[x])
-        image = update_text(image, masked_counter)
+        image = update_text(image, masked_counter, len(faces) > 0)
 
         cv2.imshow("Dami & Jocelyn's Mask Detection", image)
 
