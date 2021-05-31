@@ -104,7 +104,7 @@ def main():
         image = cv2.flip(image, 1)
         
         # If a second has elapsed - evaluate faces
-        if time.time() - prev_time > 1:
+        if time.time() - prev_time > 0.5:
             faces = detect_faces(image, height, width)
             masked_counter = 0
             masked.clear()
