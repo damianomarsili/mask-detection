@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import layers
+from tensorflow.keras import layers, callbacks
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.utils import to_categorical
 from pathlib import Path
@@ -217,6 +217,11 @@ def train(model):
     train_images, valid_images, test_images = preprocess_images(train_images, valid_images, test_images)
     train_labels, valid_labels, test_labels = preprocess_labels(train_labels, valid_labels, test_labels)
 
+    # early_stopping = callbacks.EarlyStopping(
+        # min_delta = 0.005,
+        # patience = 3, 
+        # restore_best_weights = True)
+
     optimizer = tf.keras.optimizers.Adam(learning_rate = 0.001, decay = 6e-5)
     model.compile(
             optimizer = optimizer,
@@ -230,6 +235,9 @@ def train(model):
             batch_size = 10,
             epochs = 50, 
             validation_data = (valid_images, valid_labels))
+            # callbacks = [early_stopping], 
+            # verbose = 0)
+
     plot_metrics(history)
     
 
@@ -247,6 +255,7 @@ def make_model():
     model = keras.Sequential([
         pretrained_base,
         layers.Flatten(),
+        layers.Dense(16, activation = 'relu'),
         layers.Dense(16, activation = 'relu'),
         layers.Dense(2, activation = 'softmax'),
         ])
