@@ -1,5 +1,5 @@
 # Mask Detection
-A simple realtime mask-detection program capable of detecting masks on multiple faces through webcam input.
+A simple real-time mask-detection program capable of detecting masks on multiple faces through webcam input.
 
 # Sample
 Need sample screenshot
