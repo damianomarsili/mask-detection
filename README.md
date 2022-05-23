@@ -6,10 +6,10 @@ A simple real-time mask-detection program capable of detecting masks on multiple
 
 # Setup
 Install dependencies
-'''sh
+```sh
 apt update
 apt install git python3-dev python3-pip build-essential libagg-dev pkg-config
-'''
+```
 
 Clone repository
 ```sh
